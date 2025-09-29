@@ -1,176 +1,179 @@
 package es.etg.psp.test;
 
-import es.etg.psp.prueba.modelo.Alumno;
-import es.etg.psp.prueba.modelo.AlumnoDao;
-import es.etg.psp.prueba.modelo.AlumnoServicio;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
+
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import es.etg.psp.prueba.modelo.Alumno;
+import es.etg.psp.prueba.modelo.AlumnoDao;
+import es.etg.psp.prueba.modelo.AlumnoServicio;
+
 import java.util.Arrays;
 import java.util.List;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class AlumnoServicioTest {
+
     @Mock
     private AlumnoDao alumnoDao;
 
-
     @InjectMocks
     private AlumnoServicio alumnoServicio;
-    
-    /**
-     * Prueba la inserción de un alumno con datos válidos
-     */
+
     @Test
-    public void testInsertar_ConDatosValidos() {
-        String nombre = "Juan";
-        String apellido = "Pérez";
-        int edad = 20;
-        Alumno alumnoEsperado = new Alumno(nombre, apellido, edad);
+    @DisplayName("Insertar alumno con datos válidos")
+    void insertarConDatosValidos() {
+        // Given
+        when(alumnoDao.guardar(any(Alumno.class))).thenReturn(new Alumno("Juan", "Pérez", 20));
 
-        when(alumnoDao.guardar(any(Alumno.class))).thenReturn(alumnoEsperado);
+        // When
+        Alumno resultado = alumnoServicio.insertar("Juan", "Pérez", 20);
 
-        Alumno resultado = alumnoServicio.insertar(nombre, apellido, edad);
-
-        assertNotNull(resultado);
-        assertEquals(nombre, resultado.getNombre());
-        assertEquals(apellido, resultado.getApellido());
-        assertEquals(edad, resultado.getEdad());
-        
+        // Then
+        assertAll("Datos del alumno",
+            () -> assertEquals("Juan", resultado.getNombre()),
+            () -> assertEquals("Pérez", resultado.getApellido()),
+            () -> assertEquals(20, resultado.getEdad())
+        );
         verify(alumnoDao, times(1)).guardar(any(Alumno.class));
     }
 
-    /**
-     * Prueba el caso cuando el nombre es nulo
-     */
     @Test
-    public void testInsertar_NombreVacio() {
-        String nombre = null;
-        String apellido = "García";
-        int edad = 22;
-
+    @DisplayName("No insertar cuando el nombre es nulo")
+    void insertarNombreNulo() {
+        // When & Then
         IllegalArgumentException exception = assertThrows(
             IllegalArgumentException.class,
-            () -> alumnoServicio.insertar(nombre, apellido, edad)
+            () -> alumnoServicio.insertar(null, "García", 22)
         );
         
         assertEquals("El nombre no puede estar vacío", exception.getMessage());
         verify(alumnoDao, never()).guardar(any(Alumno.class));
     }
 
-    /**
-     * Prueba el caso cuando el nombre contiene solo espacios en blanco
-     */
     @Test
-    public void testInsertar_NombreBlanco() {
-        String nombre = "   ";
-        String apellido = "López";
-        int edad = 21;
-
+    @DisplayName("No insertar cuando el nombre está en blanco")
+    void insertarNombreBlanco() {
+        // When & Then
         IllegalArgumentException exception = assertThrows(
             IllegalArgumentException.class,
-            () -> alumnoServicio.insertar(nombre, apellido, edad)
+            () -> alumnoServicio.insertar("   ", "López", 21)
         );
         
         assertEquals("El nombre no puede estar vacío", exception.getMessage());
         verify(alumnoDao, never()).guardar(any(Alumno.class));
     }
 
-    /**
-     * Prueba el caso cuando el apellido es nulo
-     */
     @Test
-    public void testInsertar_ApellidoVacio() {
-        String nombre = "Ana";
-        String apellido = null;
-        int edad = 23;
-
+    @DisplayName("No insertar cuando el apellido es nulo")
+    void insertarApellidoNulo() {
+        // When & Then
         IllegalArgumentException exception = assertThrows(
             IllegalArgumentException.class,
-            () -> alumnoServicio.insertar(nombre, apellido, edad)
+            () -> alumnoServicio.insertar("Ana", null, 23)
         );
         
         assertEquals("El apellido no puede estar vacío", exception.getMessage());
         verify(alumnoDao, never()).guardar(any(Alumno.class));
     }
 
-    /**
-     * Prueba el caso cuando la edad es 0
-     */
     @Test
-    public void testInsertar_EdadCero() {
-        String nombre = "Luis";
-        String apellido = "Martínez";
-        int edad = 0;
-
+    @DisplayName("No insertar cuando la edad es cero")
+    void insertarEdadCero() {
+        // When & Then
         IllegalArgumentException exception = assertThrows(
             IllegalArgumentException.class,
-            () -> alumnoServicio.insertar(nombre, apellido, edad)
+            () -> alumnoServicio.insertar("Luis", "Martínez", 0)
         );
         
         assertEquals("La edad debe ser mayor que 0", exception.getMessage());
         verify(alumnoDao, never()).guardar(any(Alumno.class));
     }
 
-    /**
-     * Prueba el caso cuando la edad es negativa
-     */
     @Test
-    public void testInsertar_EdadNegativa() {
-        String nombre = "María";
-        String apellido = "Sánchez";
-        int edad = -5;
-
+    @DisplayName("No insertar cuando la edad es negativa")
+    void insertarEdadNegativa() {
+        // When & Then
         IllegalArgumentException exception = assertThrows(
             IllegalArgumentException.class,
-            () -> alumnoServicio.insertar(nombre, apellido, edad)
+            () -> alumnoServicio.insertar("María", "Sánchez", -5)
         );
         
         assertEquals("La edad debe ser mayor que 0", exception.getMessage());
         verify(alumnoDao, never()).guardar(any(Alumno.class));
     }
 
-    /**
-     * Prueba la consulta de la lista de alumnos cuando existen registros
-     */
     @Test
-    public void testListar_AlumnosExistentes() {
-        Alumno alumno1 = new Alumno("Carlos", "Ruiz", 22);
-        Alumno alumno2 = new Alumno("Sara", "Jiménez", 20);
-        List<Alumno> alumnosEsperados = Arrays.asList(alumno1, alumno2);
-
+    @DisplayName("Listar alumnos cuando existen registros")
+    void listarConAlumnos() {
+        // Given
+        List<Alumno> alumnosEsperados = Arrays.asList(
+            new Alumno("Carlos", "Ruiz", 22),
+            new Alumno("Sara", "Jiménez", 20)
+        );
         when(alumnoDao.listar()).thenReturn(alumnosEsperados);
 
+        // When
         List<Alumno> resultado = alumnoServicio.listar();
 
-        assertNotNull(resultado);
-        assertEquals(2, resultado.size());
-        assertTrue(resultado.containsAll(alumnosEsperados));
-        
+        // Then
+        assertAll("Lista de alumnos",
+            () -> assertNotNull(resultado),
+            () -> assertEquals(2, resultado.size()),
+            () -> assertEquals("Carlos", resultado.get(0).getNombre()),
+            () -> assertEquals("Sara", resultado.get(1).getNombre())
+        );
         verify(alumnoDao, times(1)).listar();
     }
 
-    /**
-     * Prueba la consulta de la lista de alumnos cuando no hay registros
-     */
     @Test
-    public void testListar_SinAlumnos() {
+    @DisplayName("Listar cuando no hay alumnos")
+    void listarSinAlumnos() {
+        // Given
         when(alumnoDao.listar()).thenReturn(List.of());
 
+        // When
         List<Alumno> resultado = alumnoServicio.listar();
 
-        assertNotNull(resultado);
-        assertTrue(resultado.isEmpty());
-        
+        // Then
+        assertAll("Lista vacía",
+            () -> assertNotNull(resultado),
+            () -> assertTrue(resultado.isEmpty())
+        );
         verify(alumnoDao, times(1)).listar();
+    }
+
+    @Test
+    @DisplayName("Probar múltiples inserciones válidas")
+    void insertarMultiplesAlumnosValidos() {
+        // Given
+        when(alumnoDao.guardar(any(Alumno.class)))
+            .thenReturn(new Alumno("Juan", "Pérez", 20))
+            .thenReturn(new Alumno("Ana", "García", 22))
+            .thenReturn(new Alumno("Luis", "Martínez", 21));
+
+        // When & Then
+        assertAll("Múltiples inserciones",
+            () -> {
+                Alumno alumno1 = alumnoServicio.insertar("Juan", "Pérez", 20);
+                assertEquals("Juan", alumno1.getNombre());
+            },
+            () -> {
+                Alumno alumno2 = alumnoServicio.insertar("Ana", "García", 22);
+                assertEquals("Ana", alumno2.getNombre());
+            },
+            () -> {
+                Alumno alumno3 = alumnoServicio.insertar("Luis", "Martínez", 21);
+                assertEquals("Luis", alumno3.getNombre());
+            }
+        );
+        verify(alumnoDao, times(3)).guardar(any(Alumno.class));
     }
 }
