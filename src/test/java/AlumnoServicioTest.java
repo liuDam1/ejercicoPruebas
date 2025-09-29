@@ -144,7 +144,6 @@ public class AlumnoServicioTest {
     @Test
     @DisplayName("Probar múltiples inserciones válidas")
     void insertarMultiplesAlumnosValidos() {
-        // Given
         when(alumnoDao.guardar(any(Alumno.class)))
             .thenReturn(new Alumno("Juan", "Pérez", 20))
             .thenReturn(new Alumno("Ana", "García", 22))

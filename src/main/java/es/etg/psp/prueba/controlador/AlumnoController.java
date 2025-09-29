@@ -7,7 +7,7 @@ import javafx.stage.Stage;
 
 public class AlumnoController extends Application {
 
-    private static final String RUTA_VISTA_FXML = "/es/etg/psp/prueba/vista/formularioAlumnoView.fxml";
+    private static final String RUTA_VISTA_FXML = "/es/etg/psp/prueba/resoucer/formularioAlumnoView.fxml";
     private static final String TITULO_VENTANA = "Gestión de Alumnos";
 
     @Override
