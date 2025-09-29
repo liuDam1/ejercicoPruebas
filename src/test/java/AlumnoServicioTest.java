@@ -1,22 +1,28 @@
 
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.*;
+import java.util.Arrays;
+import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import static org.mockito.ArgumentMatchers.any;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import es.etg.psp.prueba.modelo.Alumno;
 import es.etg.psp.prueba.modelo.AlumnoDao;
 import es.etg.psp.prueba.modelo.AlumnoServicio;
-
-import java.util.Arrays;
-import java.util.List;
 
 @ExtendWith(MockitoExtension.class)
 public class AlumnoServicioTest {
@@ -30,13 +36,10 @@ public class AlumnoServicioTest {
     @Test
     @DisplayName("Insertar alumno con datos válidos")
     void insertarConDatosValidos() {
-        // Given
         when(alumnoDao.guardar(any(Alumno.class))).thenReturn(new Alumno("Juan", "Pérez", 20));
 
-        // When
         Alumno resultado = alumnoServicio.insertar("Juan", "Pérez", 20);
 
-        // Then
         assertAll("Datos del alumno",
             () -> assertEquals("Juan", resultado.getNombre()),
             () -> assertEquals("Pérez", resultado.getApellido()),
@@ -48,7 +51,6 @@ public class AlumnoServicioTest {
     @Test
     @DisplayName("No insertar cuando el nombre es nulo")
     void insertarNombreNulo() {
-        // When & Then
         IllegalArgumentException exception = assertThrows(
             IllegalArgumentException.class,
             () -> alumnoServicio.insertar(null, "García", 22)
@@ -61,7 +63,6 @@ public class AlumnoServicioTest {
     @Test
     @DisplayName("No insertar cuando el nombre está en blanco")
     void insertarNombreBlanco() {
-        // When & Then
         IllegalArgumentException exception = assertThrows(
             IllegalArgumentException.class,
             () -> alumnoServicio.insertar("   ", "López", 21)
@@ -74,7 +75,6 @@ public class AlumnoServicioTest {
     @Test
     @DisplayName("No insertar cuando el apellido es nulo")
     void insertarApellidoNulo() {
-        // When & Then
         IllegalArgumentException exception = assertThrows(
             IllegalArgumentException.class,
             () -> alumnoServicio.insertar("Ana", null, 23)
@@ -87,7 +87,6 @@ public class AlumnoServicioTest {
     @Test
     @DisplayName("No insertar cuando la edad es cero")
     void insertarEdadCero() {
-        // When & Then
         IllegalArgumentException exception = assertThrows(
             IllegalArgumentException.class,
             () -> alumnoServicio.insertar("Luis", "Martínez", 0)
@@ -100,7 +99,6 @@ public class AlumnoServicioTest {
     @Test
     @DisplayName("No insertar cuando la edad es negativa")
     void insertarEdadNegativa() {
-        // When & Then
         IllegalArgumentException exception = assertThrows(
             IllegalArgumentException.class,
             () -> alumnoServicio.insertar("María", "Sánchez", -5)
@@ -113,17 +111,14 @@ public class AlumnoServicioTest {
     @Test
     @DisplayName("Listar alumnos cuando existen registros")
     void listarConAlumnos() {
-        // Given
         List<Alumno> alumnosEsperados = Arrays.asList(
             new Alumno("Carlos", "Ruiz", 22),
             new Alumno("Sara", "Jiménez", 20)
         );
         when(alumnoDao.listar()).thenReturn(alumnosEsperados);
 
-        // When
         List<Alumno> resultado = alumnoServicio.listar();
 
-        // Then
         assertAll("Lista de alumnos",
             () -> assertNotNull(resultado),
             () -> assertEquals(2, resultado.size()),
@@ -136,13 +131,9 @@ public class AlumnoServicioTest {
     @Test
     @DisplayName("Listar cuando no hay alumnos")
     void listarSinAlumnos() {
-        // Given
         when(alumnoDao.listar()).thenReturn(List.of());
 
-        // When
         List<Alumno> resultado = alumnoServicio.listar();
-
-        // Then
         assertAll("Lista vacía",
             () -> assertNotNull(resultado),
             () -> assertTrue(resultado.isEmpty())
@@ -159,7 +150,6 @@ public class AlumnoServicioTest {
             .thenReturn(new Alumno("Ana", "García", 22))
             .thenReturn(new Alumno("Luis", "Martínez", 21));
 
-        // When & Then
         assertAll("Múltiples inserciones",
             () -> {
                 Alumno alumno1 = alumnoServicio.insertar("Juan", "Pérez", 20);
