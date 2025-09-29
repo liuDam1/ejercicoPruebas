@@ -8,47 +8,44 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
 import java.util.Arrays;
 import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class AlumnoServicioTest {
-
-    // Simulación de la dependencia AlumnoDao
     @Mock
     private AlumnoDao alumnoDao;
 
-    // Inyectar el mock del DAO en el servicio a probar
+
     @InjectMocks
     private AlumnoServicio alumnoServicio;
-
+    
     /**
      * Prueba la inserción de un alumno con datos válidos
      */
     @Test
     public void testInsertar_ConDatosValidos() {
-        // Datos de prueba
         String nombre = "Juan";
         String apellido = "Pérez";
         int edad = 20;
         Alumno alumnoEsperado = new Alumno(nombre, apellido, edad);
 
-        // Simular el comportamiento del DAO
         when(alumnoDao.guardar(any(Alumno.class))).thenReturn(alumnoEsperado);
 
-        // Ejecutar el método a probar
         Alumno resultado = alumnoServicio.insertar(nombre, apellido, edad);
 
-        // Verificar resultados
         assertNotNull(resultado);
         assertEquals(nombre, resultado.getNombre());
         assertEquals(apellido, resultado.getApellido());
         assertEquals(edad, resultado.getEdad());
         
-        // Verificar que se llamó al método del DAO
         verify(alumnoDao, times(1)).guardar(any(Alumno.class));
     }
 
