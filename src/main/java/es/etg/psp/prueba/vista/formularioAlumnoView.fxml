@@ -6,41 +6,33 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<Pane id="panePrincipal" fx:id="panePrincipal" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="1026.0" minWidth="1326.0" prefHeight="1026.0" prefWidth="1326.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<Pane id="panePrincipal" fx:id="panePrincipal" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="1026.0" minWidth="1326.0" prefHeight="1026.0" prefWidth="1326.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <Label id="labelTitulo" fx:id="labelTitulo" layoutX="372.0" layoutY="49.0" text="Introduce los datos">
          <font>
             <Font size="60.0" />
          </font></Label>
-      <Label id="labelNombre" fx:id="labelNombre" layoutX="155.0" layoutY="213.0" text="Nombre:">
+      <Label id="labelNombre" fx:id="labelNombre" layoutX="155.0" layoutY="292.0" text="Nombre:">
          <font>
             <Font size="50.0" />
          </font></Label>
-      <TextField id="textNombre" fx:id="textNombre" layoutX="413.0" layoutY="196.0" prefHeight="72.0" prefWidth="433.0">
+      <TextField id="textNombre" fx:id="textNombre" layoutX="413.0" layoutY="275.0" prefHeight="72.0" prefWidth="433.0">
          <font>
             <Font size="50.0" />
          </font></TextField>
-      <Label id="labelApellido" fx:id="labelApellido" layoutX="154.0" layoutY="342.0" text="Apellido:">
+      <Label id="labelApellido" fx:id="labelApellido" layoutX="154.0" layoutY="421.0" text="Apellido:">
          <font>
             <Font size="50.0" />
          </font></Label>
-      <TextField id="textApellido" fx:id="textApellido" layoutX="413.0" layoutY="325.0" prefHeight="61.0" prefWidth="433.0">
+      <TextField id="textApellido" fx:id="textApellido" layoutX="413.0" layoutY="404.0" prefHeight="61.0" prefWidth="433.0">
          <font>
             <Font size="50.0" />
          </font></TextField>
-      <Label id="labelDireccion" fx:id="labelDireccion" layoutX="155.0" layoutY="476.0" text="Direccion:">
+      <Label id="labelEdad" fx:id="labelEdad" layoutX="154.0" layoutY="550.0" text="Edad:">
          <font>
             <Font size="50.0" />
          </font></Label>
-      <TextField id="textDireccion" fx:id="textDireccion" layoutX="438.0" layoutY="459.0" prefHeight="51.0" prefWidth="764.0">
-         <font>
-            <Font size="50.0" />
-         </font></TextField>
-      <Label id="labelEdad" fx:id="labelEdad" layoutX="154.0" layoutY="612.0" text="Edad:">
-         <font>
-            <Font size="50.0" />
-         </font></Label>
-      <TextField id="textEdad" fx:id="textEdad" layoutX="326.0" layoutY="595.0" prefHeight="89.0" prefWidth="433.0">
+      <TextField id="textEdad" fx:id="textEdad" layoutX="326.0" layoutY="533.0" prefHeight="89.0" prefWidth="433.0">
          <font>
             <Font size="50.0" />
          </font></TextField>
