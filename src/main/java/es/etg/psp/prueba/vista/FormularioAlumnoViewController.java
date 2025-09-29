@@ -23,6 +23,13 @@ public class FormularioAlumnoViewController {
 
     private AlumnoServicio servicio;
 
+    private static final String TITULO_ALUMNO_INSERTADO = "Alumno insertado";
+    private static final String TITULO_ERROR = "Error";
+    private static final String MENSAJE_ERROR_EDAD_NUMERO = "La edad debe ser un número entero";
+    private static final String TITULO_LISTADO_ALUMNOS = "Listado de alumnos";
+    private static final String MENSAJE_NO_ALUMNOS_REGISTRADOS = "No hay alumnos registrados.";
+    private static final String SALTO_LINEA = "\n";
+
     public FormularioAlumnoViewController() {
         this.servicio = new AlumnoServicio(new AlumnoDaoMemoria());
     }
@@ -41,27 +48,27 @@ public class FormularioAlumnoViewController {
 
             Alumno alumno = servicio.insertar(nombre, apellido, edad);
 
-            mostrarAlerta("Alumno insertado", alumno.toString(), Alert.AlertType.INFORMATION);
+            mostrarAlerta(TITULO_ALUMNO_INSERTADO, alumno.toString(), Alert.AlertType.INFORMATION);
 
             textNombre.clear();
             textApellido.clear();
             textEdad.clear();
         } catch (NumberFormatException ex) {
-            mostrarAlerta("Error", "La edad debe ser un número entero", Alert.AlertType.ERROR);
+            mostrarAlerta(TITULO_ERROR, MENSAJE_ERROR_EDAD_NUMERO, Alert.AlertType.ERROR);
         } catch (IllegalArgumentException ex) {
-            mostrarAlerta("Error", ex.getMessage(), Alert.AlertType.ERROR);
+            mostrarAlerta(TITULO_ERROR, ex.getMessage(), Alert.AlertType.ERROR);
         }
     }
 
     private void listarAlumnos() {
         StringBuilder sb = new StringBuilder();
         for (Alumno a : servicio.listar()) {
-            sb.append(a).append("\n");
+            sb.append(a).append(SALTO_LINEA);
         }
         if (sb.length() == 0)
-            sb.append("No hay alumnos registrados.");
+            sb.append(MENSAJE_NO_ALUMNOS_REGISTRADOS);
 
-        mostrarAlerta("Listado de alumnos", sb.toString(), Alert.AlertType.INFORMATION);
+        mostrarAlerta(TITULO_LISTADO_ALUMNOS, sb.toString(), Alert.AlertType.INFORMATION);
     }
 
     private void mostrarAlerta(String titulo, String mensaje, Alert.AlertType tipo) {
